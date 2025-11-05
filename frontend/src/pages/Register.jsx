@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+const API = process.env.REACT_APP_API || "";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -33,7 +34,7 @@ const Register = () => {
 
     try {
       // 2. Send request to the backend API
-      const response = await fetch("http://localhost:5050/api/auth/register", {
+      const response = await fetch(`${API}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,0 +1,2 @@
+MONGO_URI=mongodb+srv://SaeifAdmin:SaeifAdmin@2025@saeifdb.vlpetsv.mongodb.net/?appName=SaeifDB
+JWT_SECRET=8d4f2b7b14e8cfd1c3a0b11e6d2f07faaf7d92d8a923e3b6a1bca8179e4f6c3d

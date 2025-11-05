@@ -7,7 +7,12 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5050;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://saeif.netlify.app/login", "http://localhost:3000"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 const blogRoutes = require("./routes/blog");
