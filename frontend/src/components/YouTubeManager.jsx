@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 // Hardcode the API path just like we did for the blog
-const API = "http://localhost:5050";
+const API = process.env.REACT_APP_API || "";
 
 const YouTubeManager = () => {
   const [videos, setVideos] = useState([]);
