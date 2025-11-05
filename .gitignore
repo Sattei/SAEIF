@@ -1,0 +1,14 @@
+# Dependency directories
+/frontend/node_modules
+/backend/node_modules
+
+# Build folder
+/frontend/build
+
+# Environment files with sensitive keys
+/frontend/.env
+/backend/.env
+
+# Log files
+npm-debug.log
+*.log
