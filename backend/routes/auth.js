@@ -12,12 +12,28 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ error: "Invalid credentials" });
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
-    const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, {
-      expiresIn: "1d",
+
+    // --- FIX ---
+    // Added user.isAdmin to the token payload
+    const payload = {
+      userId: user._id,
+      role: user.role,
+      isAdmin: user.isAdmin,
+    };
+
+    const token = jwt.sign(payload, JWT_SECRET, {
+      expiresIn: 900, // --- FIX --- (This is 15 minutes)
     });
-    res.json({ token, role: user.role, userId: user._id });
+
+    res.json({
+      token,
+      role: user.role,
+      userId: user._id,
+      isAdmin: user.isAdmin,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -35,24 +51,36 @@ router.post("/register", async (req, res) => {
     }
 
     // 2. Create new user instance
-    // We only take email and password. The role will default to 'user'
-    // as defined in your User.js model.
     user = new User({
       email,
       password,
     });
 
     // 3. Save user to database
-    // The 'pre-save' hook in User.js will automatically hash the password
     await user.save();
 
     // 4. (Optional) Log the user in immediately by creating a token
-    const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, {
-      expiresIn: "1d",
+    // --- FIX ---
+    // Added user.isAdmin to the token payload
+    const payload = {
+      userId: user._id,
+      role: user.role,
+      isAdmin: user.isAdmin,
+    };
+
+    const token = jwt.sign(payload, JWT_SECRET, {
+      expiresIn: 900, // --- FIX --- (This is 15 minutes)
     });
 
     // 5. Send back the token and role
-    res.status(201).json({ token, role: user.role, userId: user._id });
+    res
+      .status(201)
+      .json({
+        token,
+        role: user.role,
+        userId: user._id,
+        isAdmin: user.isAdmin,
+      });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
