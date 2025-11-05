@@ -7,12 +7,13 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5050;
 
-app.use(
-  cors({
-    origin: ["https://saeif.netlify.app/login", "http://localhost:3000"],
-    credentials: true,
-  })
-);
+// Configure CORS to allow your Netlify frontend
+const corsOptions = {
+  origin: "https://saeif.netlify.app", // Your exact frontend URL
+  optionsSuccessStatus: 200, // For legacy browsers
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const blogRoutes = require("./routes/blog");

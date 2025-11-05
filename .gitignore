@@ -8,7 +8,9 @@
 # Environment files with sensitive keys
 /frontend/.env
 /backend/.env
-
 # Log files
 npm-debug.log
 *.log
+
+# Important details file
+Imp saeif details.txt
