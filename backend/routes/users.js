@@ -1,5 +1,5 @@
 const express = require("express");
-const User = require("../models/User"); // <-- This is the critical line
+const User = require("../models/User");
 const admin = require("../middleware/admin");
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.get("/", admin, async (req, res) => {
     const users = await User.find().select("-password");
     res.json(users);
   } catch (err) {
-    console.error(err.message); // Log the error
+    console.error(err.message);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -27,11 +27,12 @@ router.put("/promote/:id", admin, async (req, res) => {
     }
 
     user.role = "admin";
+    user.isAdmin = true; // ✅ Ensure flag is updated
     await user.save();
 
-    res.json({ message: "User promoted to admin" });
+    res.json({ message: "User promoted to admin successfully" });
   } catch (err) {
-    console.error(err.message); // Log the error
+    console.error(err.message);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -41,23 +42,23 @@ router.put("/promote/:id", admin, async (req, res) => {
 // @access  Admin
 router.put("/demote/:id", admin, async (req, res) => {
   try {
-    // 1. Check that the admin is not demoting themselves
+    // Prevent self-demotion
     if (req.user.userId === req.params.id) {
       return res.status(400).json({ error: "You cannot demote yourself." });
     }
 
-    // 2. Find and demote the user
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
     user.role = "member";
+    user.isAdmin = false; // ✅ Ensure flag is updated
     await user.save();
 
-    res.json({ message: "User demoted to user" });
+    res.json({ message: "User demoted to member successfully" });
   } catch (err) {
-    console.error(err.message); // Log the error
+    console.error(err.message);
     res.status(500).json({ error: "Server error" });
   }
 });
