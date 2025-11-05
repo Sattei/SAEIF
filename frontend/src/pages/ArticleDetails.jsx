@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-const API = "http://localhost:5050";
+const API = process.env.REACT_APP_API || "";
 
 const ArticleDetails = () => {
   const [post, setPost] = useState(null);

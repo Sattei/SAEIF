@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { FaMapMarkerAlt, FaEnvelope, FaPhone } from "react-icons/fa";
+const API = process.env.REACT_APP_API || "";
 
 const Contact = () => {
-  const [form, setForm] = useState({ 
-    name: "", 
-    surname: "", 
-    email: "", 
-    mobile: "", 
-    message: "" 
+  const [form, setForm] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    mobile: "",
+    message: "",
   });
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ const Contact = () => {
     setLoading(true);
     setStatus("");
     try {
-      const res = await fetch("http://localhost:5000/api/contact", {
+      const res = await fetch(`${API}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -50,7 +51,7 @@ const Contact = () => {
             className="w-full h-full object-cover opacity-30"
           />
         </div>
-        
+
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Side - Text */}
@@ -66,7 +67,7 @@ const Contact = () => {
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
                 Contact <span className="text-accent">Us</span>
               </h2>
-              
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
@@ -90,7 +91,7 @@ const Contact = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <input
                     name="email"
@@ -102,7 +103,7 @@ const Contact = () => {
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/70 focus:outline-none focus:border-accent transition-colors"
                   />
                 </div>
-                
+
                 <div>
                   <input
                     name="mobile"
@@ -113,7 +114,7 @@ const Contact = () => {
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/70 focus:outline-none focus:border-accent transition-colors"
                   />
                 </div>
-                
+
                 <div>
                   <textarea
                     name="message"
@@ -125,7 +126,7 @@ const Contact = () => {
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/70 focus:outline-none focus:border-accent transition-colors resize-none"
                   />
                 </div>
-                
+
                 <button
                   type="submit"
                   disabled={loading}
@@ -133,7 +134,7 @@ const Contact = () => {
                 >
                   {loading ? "Sending..." : "Submit"}
                 </button>
-                
+
                 {status && (
                   <div className="text-center text-green-400 font-medium">
                     {status}
@@ -153,10 +154,11 @@ const Contact = () => {
               Get in <span className="text-accent">Touch</span>
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Reach out to us through any of these channels. We're here to help and answer your questions.
+              Reach out to us through any of these channels. We're here to help
+              and answer your questions.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Address Card */}
             <div className="group bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-150 ease-out transform hover:-translate-y-1 border border-gray-100">
@@ -166,7 +168,9 @@ const Contact = () => {
                 </div>
                 <div className="absolute -top-2 -right-2 w-4 h-4 sm:w-6 sm:h-6 bg-accent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out"></div>
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3 text-center">Our Location</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3 text-center">
+                Our Location
+              </h3>
               <p className="text-sm sm:text-base text-gray-600 text-center leading-relaxed">
                 Ashok Vihar, Delhi, 110052
               </p>
@@ -180,7 +184,9 @@ const Contact = () => {
                 </div>
                 <div className="absolute -top-2 -right-2 w-4 h-4 sm:w-6 sm:h-6 bg-accent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out"></div>
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3 text-center">Email Us</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3 text-center">
+                Email Us
+              </h3>
               <p className="text-sm sm:text-base text-gray-600 text-center leading-relaxed break-words">
                 skillaidempowerindia@gmail.com
               </p>
@@ -194,7 +200,9 @@ const Contact = () => {
                 </div>
                 <div className="absolute -top-2 -right-2 w-4 h-4 sm:w-6 sm:h-6 bg-accent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-out"></div>
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3 text-center">Call Us</h3>
+              <h3 className="text-lg sm:text-xl font-bold text-primary mb-2 sm:mb-3 text-center">
+                Call Us
+              </h3>
               <p className="text-sm sm:text-base text-gray-600 text-center leading-relaxed">
                 +91 971 170 6032
               </p>
@@ -224,4 +232,4 @@ const Contact = () => {
   );
 };
 
-export default Contact; 
+export default Contact;
