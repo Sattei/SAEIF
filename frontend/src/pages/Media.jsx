@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const API = "http://localhost:5050";
+const API = process.env.REACT_APP_API || "";
 
 const getYouTubeId = (url) => {
   try {
