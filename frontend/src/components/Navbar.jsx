@@ -56,7 +56,7 @@ const Navbar = () => {
     const links = [...staticNavLinks];
 
     if (isLoggedIn && role === "member") {
-      links.splice(1, 0, { name: "Dashboard", to: "/user" });
+      links.splice(1, 0, { name: "Dashboard", to: "/member" });
     }
     if (isLoggedIn && role === "admin") {
       links.splice(1, 0, { name: "Admin Panel", to: "/admin" });
