@@ -1,35 +1,34 @@
 require("dotenv").config();
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 5050;
 
-// Configure CORS to allow your Netlify frontend
+// ✅ Dynamic CORS setup
+const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:3000"];
+
 const corsOptions = {
-  origin: "https://saeif.netlify.app", // Your exact frontend URL
-  optionsSuccessStatus: 200, // For legacy browsers
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 
-const blogRoutes = require("./routes/blog");
-const mediaRoutes = require("./routes/media");
-const authRoutes = require("./routes/auth");
-const youtubeRoutes = require("./routes/youtube");
-const blogPageContentRoutes = require("./routes/blogPageContent");
-const membershipRoutes = require("./routes/membership");
-const userRoutes = require("./routes/users");
-
-// Test route
-app.get("/api/test", (req, res) => {
-  res.json({ message: "Backend is working!" });
-});
-
-// MongoDB connection (placeholder URI)
+// ✅ Routes
+app.get("/api/test", (req, res) =>
+  res.json({ message: "Backend is working!" })
+);
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -40,14 +39,20 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/blog", require("./routes/blog"));
-app.use("/uploads", express.static(require("path").join(__dirname, "uploads")));
-app.use("/api/media", mediaRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/youtube", youtubeRoutes);
-app.use("/api/blogpagecontent", blogPageContentRoutes);
-app.use("/api/membership", membershipRoutes);
-app.use("/api/users", userRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/api/media", require("./routes/media"));
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/youtube", require("./routes/youtube"));
+app.use("/api/blogpagecontent", require("./routes/blogPageContent"));
+app.use("/api/membership", require("./routes/membership"));
+app.use("/api/users", require("./routes/users"));
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// ✅ Graceful CORS error handler
+app.use((err, req, res, next) => {
+  if (err.message === "Not allowed by CORS") {
+    return res.status(403).json({ error: "CORS policy: Access denied" });
+  }
+  next(err);
 });
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

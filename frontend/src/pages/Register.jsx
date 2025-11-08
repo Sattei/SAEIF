@@ -9,8 +9,8 @@ const Register = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
+    const token = sessionStorage.getItem("token");
+    const role = sessionStorage.getItem("role");
 
     if (token) {
       // If a user is already logged in, redirect them
@@ -50,9 +50,9 @@ const Register = () => {
       }
 
       // 3. (Optional) If registration is successful, log the user in
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("userId", data.userId);
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("role", data.role);
+      sessionStorage.setItem("userId", data.userId);
 
       // 4. Redirect to the homepage
       navigate("/login");

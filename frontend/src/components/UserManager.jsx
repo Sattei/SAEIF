@@ -7,12 +7,12 @@ const UserManager = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const currentAdminId = localStorage.getItem("userId");
+  const currentAdminId = sessionStorage.getItem("userId");
 
   const fetchUsers = async () => {
     setLoading(true);
     setError("");
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     try {
       const res = await fetch(`${API}/api/users`, {
         headers: {
@@ -39,7 +39,7 @@ const UserManager = () => {
       return;
     }
 
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     try {
       const res = await fetch(`${API}/api/users/promote/${userId}`, {
         method: "PUT",
@@ -63,7 +63,7 @@ const UserManager = () => {
       return;
     }
 
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     try {
       const res = await fetch(`${API}/api/users/demote/${userId}`, {
         method: "PUT",

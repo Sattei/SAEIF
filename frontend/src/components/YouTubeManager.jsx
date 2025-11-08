@@ -44,7 +44,7 @@ const YouTubeManager = () => {
     setLoading(true);
     setError("");
 
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     // This is simple JSON, no FormData needed
     const body = JSON.stringify({ title, url, description });
@@ -83,7 +83,7 @@ const YouTubeManager = () => {
     if (!window.confirm("Are you sure you want to delete this video?")) return;
 
     setLoading(true);
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     try {
       const res = await fetch(`${API}/api/youtube/${id}`, {
         method: "DELETE",

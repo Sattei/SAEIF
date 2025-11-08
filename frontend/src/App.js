@@ -18,6 +18,8 @@ import Members from "./pages/Members";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
 import UserPage from "./pages/UserPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
         <Route path="/donate" element={<Donate />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/register" element={<Register />} />
         <Route path="/membership" element={<Membership />} />
         <Route path="/payment" element={<Payment />} />

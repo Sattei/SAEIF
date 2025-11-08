@@ -1,22 +1,22 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children, requiredRole = null }) => {
-  const token = localStorage.getItem('token');
-  const userRole = localStorage.getItem('role');
+const ProtectedRoute = ({ children, requiredRole }) => {
+  const token = sessionStorage.getItem("token");
+  const role = sessionStorage.getItem("role");
 
-  // If no token, redirect to login
+  // Not logged in → send to login
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  // If role is required and user doesn't have it, redirect to home
-  if (requiredRole && userRole !== requiredRole) {
-    return <Navigate to="/" replace />;
+  // Logged in but wrong role → redirect
+  if (requiredRole && role !== requiredRole) {
+    return <Navigate to={role === "admin" ? "/admin" : "/user"} replace />;
   }
 
-  // If all checks pass, render the protected component
+  // Authorized → render page
   return children;
 };
 
-export default ProtectedRoute; 
+export default ProtectedRoute;

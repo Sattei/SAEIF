@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const API = process.env.REACT_APP_API || "";
 
+// Extract YouTube video ID from URL
 const getYouTubeId = (url) => {
   try {
     const videoUrl = new URL(url);
@@ -12,6 +13,7 @@ const getYouTubeId = (url) => {
   }
 };
 
+// Video Modal
 const VideoModal = ({ video, onClose }) => {
   const videoId = getYouTubeId(video.url);
   if (!videoId) return null;
@@ -22,18 +24,18 @@ const VideoModal = ({ video, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white p-4 rounded-2xl shadow-2xl relative w-full max-w-3xl mx-auto max-h-[85vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl relative w-full max-w-3xl mx-auto max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="sticky top-2 float-right bg-white border border-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-2xl font-bold text-gray-700 hover:text-black shadow-md z-50"
+          className="sticky top-2 right-2 bg-white border border-gray-300 rounded-full w-9 h-9 flex items-center justify-center text-2xl font-bold text-gray-700 hover:text-black shadow-md z-50"
         >
           &times;
         </button>
 
-        {/* Video Embed (16:9 ratio) */}
+        {/* Embedded Video */}
         <div className="relative w-full mt-2" style={{ paddingTop: "56.25%" }}>
           <iframe
             src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
@@ -45,8 +47,8 @@ const VideoModal = ({ video, onClose }) => {
           ></iframe>
         </div>
 
-        {/* Title + Description */}
-        <div className="mt-6 px-2 md:px-4 pb-6">
+        {/* Title and Description */}
+        <div className="mt-6 px-6 pb-8">
           <h3 className="text-2xl font-semibold text-gray-900 mb-2">
             {video.title}
           </h3>
@@ -59,6 +61,7 @@ const VideoModal = ({ video, onClose }) => {
   );
 };
 
+// Main Media Page
 const Media = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -96,32 +99,71 @@ const Media = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold text-center mb-12">Media</h1>
+    <div className="bg-gray-50">
+      {/* ---------- Hero Section ---------- */}
+      <section
+        className="relative h-[65vh] flex flex-col items-center justify-center text-white bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/assets/media-hero.jpg')",
+        }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="relative z-10 text-center px-4">
+          <h1 className="text-5xl font-bold mb-4">Media</h1>
+          <p className="text-lg max-w-2xl mx-auto">
+            Explore our journey through powerful visuals that capture the
+            impact, growth, and success stories of individuals empowered by
+            SaEIF initiatives.
+          </p>
+
+          <div className="mt-10 flex justify-center gap-8 text-lg font-medium">
+            <div>
+              <span className="text-3xl font-bold">5+</span> <br /> Events
+            </div>
+            <div>
+              <span className="text-3xl font-bold">50+</span> <br /> Videos
+            </div>
+            <div>
+              <span className="text-3xl font-bold">1000+</span> <br /> Lives
+              Impacted
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- Featured Stories ---------- */}
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-4xl font-bold text-center mb-4">
+          Featured <span className="text-blue-600">Stories</span>
+        </h2>
+        <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
+          Handpicked moments that showcase our most impactful programs and
+          inspiring success stories.
+        </p>
+
+        {/* Videos Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {videos.map((video) => {
             const videoId = getYouTubeId(video.url);
             if (!videoId) return null;
-
             const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
             return (
               <div
                 key={video._id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition-transform hover:-translate-y-1"
+                className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
                 onClick={() => setSelectedVideo(video)}
               >
                 <div className="relative">
                   <img
                     src={thumbnailUrl}
                     alt={video.title}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-56 object-cover"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
+                  <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                     <svg
-                      className="w-16 h-16 text-white opacity-80"
+                      className="w-16 h-16 text-white opacity-90"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -133,18 +175,12 @@ const Media = () => {
                     </svg>
                   </div>
                 </div>
+
                 <div className="p-6">
-                  <h2 className="text-xl font-semibold mb-2 truncate">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                     {video.title}
-                  </h2>
-                  <p
-                    className="text-gray-700 text-sm overflow-hidden"
-                    style={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
+                  </h3>
+                  <p className="text-gray-600 text-sm line-clamp-2">
                     {video.description}
                   </p>
                 </div>
@@ -152,8 +188,9 @@ const Media = () => {
             );
           })}
         </div>
-      </div>
+      </section>
 
+      {/* ---------- Modal ---------- */}
       {selectedVideo && (
         <VideoModal
           video={selectedVideo}

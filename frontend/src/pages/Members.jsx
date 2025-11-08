@@ -12,8 +12,8 @@ const Members = () => {
   const navigate = useNavigate();
 
   const checkAuthAndLoadData = useCallback(async () => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
+    const token = sessionStorage.getItem("token");
+    const userId = sessionStorage.getItem("userId");
 
     if (!token || !userId) {
       navigate("/login");
@@ -64,9 +64,9 @@ const Members = () => {
   }, [checkAuthAndLoadData]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("userId");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("userId");
     navigate("/login");
   };
 

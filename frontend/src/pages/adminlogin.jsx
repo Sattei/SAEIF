@@ -9,18 +9,13 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
 
-    if (token) {
-      // If a user is already logged in, redirect them
-      if (role === "admin") {
-        navigate("/admin");
-      } else {
-        // A regular user shouldn't be on the admin login page
-        navigate("/user");
-      }
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const role = sessionStorage.getItem("role");
+
+    if (token && role === "admin") {
+      navigate("/admin");
     }
   }, [navigate]);
 
@@ -30,6 +25,12 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
+      if (!API) {
+        throw new Error(
+          "API endpoint is not configured. (Check .env file for REACT_APP_API)"
+        );
+      }
+
       const res = await fetch(`${API}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,9 +46,10 @@ const AdminLogin = () => {
       }
 
       // 1. Save credentials
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("userId", data.userId);
+      // Using sessionStorage is CORRECT for logging out when tab closes
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("role", data.role);
+      sessionStorage.setItem("userId", data.userId);
 
       // 2. Redirect to admin panel
       navigate("/admin");

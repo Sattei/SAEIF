@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { FaLock, FaGoogle, FaLinkedin, FaMicrosoft } from "react-icons/fa";
+import { useNavigate, Link } from "react-router-dom"; // Make sure Link is imported
+import { FaGoogle, FaLinkedin } from "react-icons/fa";
 
 const API = process.env.REACT_APP_API || "";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loginMethod, setLoginMethod] = useState("email"); // 'email' or 'phone'
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
+    const token = sessionStorage.getItem("token");
+    const role = sessionStorage.getItem("role");
 
     if (token) {
-      // If a user is already logged in, redirect them
+      // Redirect if already logged in
       if (role === "admin") {
         navigate("/admin");
       } else {
@@ -30,27 +31,38 @@ const Login = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
+    console.log("Connecting to API at:", API);
 
     try {
+      if (!API) {
+        throw new Error(
+          "API endpoint is not configured. (Check .env file for REACT_APP_API)"
+        );
+      }
+
+      const body =
+        loginMethod === "email"
+          ? { email: emailOrPhone, password }
+          : { phone: emailOrPhone, password };
+
       const res = await fetch(`${API}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(body),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
 
-      // 1. Save credentials
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("role", data.role);
-      localStorage.setItem("userId", data.userId);
+      // Save credentials
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("role", data.role);
+      sessionStorage.setItem("userId", data.userId);
 
-      // 2. Redirect based on role
+      // Redirect
       if (data.role === "admin") {
         navigate("/admin");
       } else {
-        // Redirect to the new UserPage
         navigate("/user");
       }
     } catch (err) {
@@ -61,7 +73,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-darkblue to-primary">
-      {/* Login Section */}
       <section
         id="login-section"
         className="py-20 px-4 min-h-screen flex items-center justify-center bg-gray-50"
@@ -82,7 +93,11 @@ const Login = () => {
               <div className="flex bg-gray-100 rounded-lg p-1">
                 <button
                   type="button"
-                  onClick={() => setLoginMethod("email")}
+                  onClick={() => {
+                    setLoginMethod("email");
+                    setEmailOrPhone("");
+                    setPassword("");
+                  }}
                   className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition ${
                     loginMethod === "email"
                       ? "bg-white text-accent shadow-sm"
@@ -93,7 +108,11 @@ const Login = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setLoginMethod("phone")}
+                  onClick={() => {
+                    setLoginMethod("phone");
+                    setEmailOrPhone("");
+                    setPassword("");
+                  }}
                   className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition ${
                     loginMethod === "phone"
                       ? "bg-white text-accent shadow-sm"
@@ -110,14 +129,24 @@ const Login = () => {
                   {loginMethod === "email" ? "Email Address" : "Phone Number"}
                 </label>
                 <input
-                  type="text"
+                  type={loginMethod === "email" ? "email" : "tel"}
                   placeholder={
                     loginMethod === "email"
                       ? "your.email@example.com"
-                      : "+91 98765 43210"
+                      : "Enter 10-digit phone number"
                   }
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={emailOrPhone}
+                  onChange={(e) => {
+                    if (loginMethod === "phone") {
+                      // Only numeric input up to 10 digits
+                      const value = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
+                      setEmailOrPhone(value);
+                    } else {
+                      setEmailOrPhone(e.target.value);
+                    }
+                  }}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition"
                   required
                 />
@@ -150,12 +179,16 @@ const Login = () => {
                     Remember me
                   </span>
                 </label>
-                <button
-                  type="button"
+
+                {/* --- MODIFICATION HERE --- */}
+                {/* Changed <button> to <Link> and added 'to' prop */}
+                <Link
+                  to="/forgot-password"
                   className="text-sm text-accent hover:text-accent/80 transition"
                 >
                   Forgot password?
-                </button>
+                </Link>
+                {/* --- END MODIFICATION --- */}
               </div>
 
               {error && (
@@ -185,7 +218,7 @@ const Login = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-4 mt-6">
+                <div className="grid grid-cols-2 gap-4 mt-6">
                   <button
                     type="button"
                     className="flex items-center justify-center space-x-2 bg-white border border-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50 transition"
@@ -199,13 +232,6 @@ const Login = () => {
                   >
                     <FaLinkedin className="text-blue-600" />
                     <span className="text-sm">LinkedIn</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="flex items-center justify-center space-x-2 bg-white border border-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50 transition"
-                  >
-                    <FaMicrosoft className="text-blue-500" />
-                    <span className="text-sm">Microsoft</span>
                   </button>
                 </div>
               </div>
@@ -221,6 +247,7 @@ const Login = () => {
                   </Link>
                 </p>
               </div>
+
               <div className="text-center mt-4">
                 <Link
                   to="/admin-login"

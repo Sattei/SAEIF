@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import BlogManager from "../components/BlogManager";
+
 import BlogIntroEditor from "../components/BlogIntroEditor";
 import YouTubeManager from "../components/YouTubeManager";
 import UserManager from "../components/UserManager";
@@ -13,16 +13,6 @@ const TABS = [
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("blogs");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Check for JWT and admin role in localStorage
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    if (!token || role !== "admin") {
-      navigate("/login");
-    }
-  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
