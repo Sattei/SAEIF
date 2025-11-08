@@ -68,7 +68,7 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 // ==================== 🧩 GRIDFS ROUTES ==================== //
-const Blog = require("./models/blog");
+const Blog = require("./models/Blog");
 
 // Upload blog with image
 app.post("/api/blogs", upload.single("image"), async (req, res) => {
