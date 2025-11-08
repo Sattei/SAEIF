@@ -17,10 +17,14 @@ const Register = () => {
       if (role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/user");
+        navigate("/member");
       }
     }
   }, [navigate]);
+
+  // [CODE FROM sattei/saeif/SAEIF-88d4c16d015f1ccaef88c51bcd1c5f45d5008407/frontend/src/pages/Register.jsx]
+
+  // ... [imports and component start] ...
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,17 +53,23 @@ const Register = () => {
         throw new Error(data.error || "Failed to register");
       }
 
+      // --- FIX: Removed automatic login ---
       // 3. (Optional) If registration is successful, log the user in
-      sessionStorage.setItem("token", data.token);
-      sessionStorage.setItem("role", data.role);
-      sessionStorage.setItem("userId", data.userId);
+      // sessionStorage.setItem("token", data.token);
+      // sessionStorage.setItem("role", data.role);
+      // sessionStorage.setItem("userId", data.userId);
+      // --- END FIX ---
 
-      // 4. Redirect to the homepage
+      // 4. Redirect to the login page
+      // You could also add a success message here before redirecting
+      // alert("Registration successful! Please log in.");
       navigate("/login");
     } catch (err) {
       setError(err.message);
     }
   };
+
+  // ... [rest of the component and export] ...
 
   return (
     <div className="container mx-auto p-4 max-w-md">

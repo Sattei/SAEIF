@@ -36,9 +36,11 @@ router.post("/login", async (req, res) => {
     }
 
     // generate JWT token
-    const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role, isAdmin: user.role === "admin" },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
     res.status(200).json({
       message: "Login successful",
@@ -61,21 +63,24 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Email or phone is required" });
     }
 
-    const existing = await User.findOne({
-      $or: [{ email }, { phone }],
-    });
+    const orConditions = [];
+    if (email) orConditions.push({ email: new RegExp(`^${email}$`, "i") });
+    if (phone) orConditions.push({ phone });
+
+    const existing = await User.findOne({ $or: orConditions });
     if (existing) {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // ✅ No manual hashing here, mongoose pre-save will handle it
     const user = new User({
       name,
       email,
       phone,
-      password: hashedPassword,
-      role: role || "user",
+      password,
+      role: role || "member",
     });
+
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });

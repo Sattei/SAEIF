@@ -21,8 +21,10 @@ const Login = () => {
       // Redirect if already logged in
       if (role === "admin") {
         navigate("/admin");
+        window.location.reload();
       } else {
-        navigate("/user");
+        navigate("/member");
+        window.location.reload();
       }
     }
   }, [navigate]);
@@ -63,7 +65,7 @@ const Login = () => {
       if (data.role === "admin") {
         navigate("/admin");
       } else {
-        navigate("/user");
+        navigate("/member");
       }
     } catch (err) {
       setError(err.message);

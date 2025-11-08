@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+
 import Home from "./pages/Home";
 import Blog from "./pages/Blog";
 import Media from "./pages/Media";
@@ -14,7 +15,6 @@ import Membership from "./pages/Membership";
 import ArticleDetails from "./pages/ArticleDetails";
 import AdminPanel from "./pages/AdminPanel";
 import Payment from "./pages/Payment";
-import Members from "./pages/Members";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Register from "./pages/Register";
 import UserPage from "./pages/UserPage";
@@ -26,6 +26,7 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/media" element={<Media />} />
@@ -40,20 +41,22 @@ function App() {
         <Route path="/membership" element={<Membership />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/blog/:id" element={<ArticleDetails />} />
-        <Route path="/user" element={<UserPage />} />
+
+        {/* Protected routes */}
+        <Route
+          path="/member"
+          element={
+            <ProtectedRoute requiredRole="member">
+              <UserPage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/admin"
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminPanel />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/members"
-          element={
-            <ProtectedRoute requiredRole="member">
-              <Members />
             </ProtectedRoute>
           }
         />
