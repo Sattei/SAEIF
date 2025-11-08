@@ -1,5 +1,5 @@
 const express = require("express");
-const Blog = require("../models/Blog");
+const Blog = require("../models/blog");
 const admin = require("../middleware/admin");
 const multer = require("multer");
 const path = require("path");

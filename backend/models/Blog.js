@@ -14,8 +14,9 @@ const BlogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // ✅ Updated to store GridFS filename instead of local path
     coverImage: {
-      type: String,
+      type: String, // stores the GridFS filename (e.g., "1731099334256-image.jpg")
       default: "",
     },
     tags: {
